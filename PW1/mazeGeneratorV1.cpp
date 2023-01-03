@@ -33,7 +33,7 @@ class Maze{
         }
 
         vector<vector<int>> getMaze(){
-            return maze;
+            return generateMaze(maze);
         }
 
     private:
@@ -97,6 +97,7 @@ class Maze{
 int main(){
     vector<vector<int>> matrix(GRID_DIM, std::vector<int>(GRID_DIM, 0));
     Maze maze1(matrix);
+    maze1.printMaze(maze1.getMaze());
     //maze1.printMaze(maze1.getMaze()); 
 }
 
