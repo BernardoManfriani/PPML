@@ -44,4 +44,5 @@ int main(){
     Ball ball(0, 0, 0);
     ball.move(1);
     printf("%d, %d", ball.xPos, ball.yPos);
+    
 }

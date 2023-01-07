@@ -111,7 +111,7 @@ vector<vector<int>> MazeGenerator::generateInternalWalls(vector<vector<int>> maz
 }
 
 vector<vector<int>> MazeGenerator::generateRandomWalls(vector<vector<int>> maze){
-    srand(time(NULL));                              //seed random number generator
+    srand(7634567);                              //seed random number generator
 
     for(int i = 1; i < GRID_DIM - 1; i++){          //generate random horizontal walls
         for(int j = 4; j < GRID_DIM - 1; j=j+5){
@@ -143,5 +143,3 @@ vector<vector<int>> MazeGenerator::generateMaze(vector<vector<int>> maze){
     maze = generateRandomWalls(maze);
     return maze;
 }
-
-

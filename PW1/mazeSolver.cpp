@@ -21,50 +21,65 @@ int main(){
     //maze2[1][2] = 2;
     maze1.printMaze(maze2);
 
-    vector<int> ball = {0,1};
+    vector<int> ball = {1,1};  //ball position
 
-    //int i = 0;
-    while (ball[0] != GRID_DIM - 1 || ball[1] != GRID_DIM - 2){ // && i < 9
+    int i = 0;  //counter
+    srand(time(NULL));
+    while ((ball[0] != GRID_DIM - 1 || ball[1] != GRID_DIM - 2) && i < 10000000){ 
         int direction = rand() % 4;
         switch (direction){
         case 0:
-            if (maze2[ball[0]][ball[1] + 1] == 0){
-                ball[1] = ball[1] + 1;
+            if (maze2[ball[0]][ball[1] + 1] == 0 || maze2[ball[0]][ball[1] + 1]  == 2){  //right
+                ball[1] = ball[1] + 1; 
+                //cout << "right" << endl;
             }
             break;
         case 1:
-            if (maze2[ball[0] + 1][ball[1]] == 0){
+            if (maze2[ball[0] + 1][ball[1]] == 0 || maze2[ball[0] + 1][ball[1]]  == 2){  //down
                 ball[0] = ball[0] + 1;
+                //cout << "down" << endl;
             }
             break;
         case 2:
-            if (maze2[ball[0]][ball[1] - 1] == 0){
+            if (maze2[ball[0]][ball[1] - 1] == 0 || maze2[ball[0]][ball[1] - 1]  == 2){  //left
                 ball[1] = ball[1] - 1;
+                //cout << "left" << endl;
             }
             break;
         case 3:
-            if (maze2[ball[0] - 1][ball[1]] == 0){
+            if (ball[0] > 0 && (maze2[ball[0] - 1][ball[1]] == 0 || maze2[ball[0] - 1][ball[1]]  == 2)){  //up
                 ball[0] = ball[0] - 1;
+                //cout << "up" << endl;
             }
             break;
         default:
             break;
         }
         maze2[ball[0]][ball[1]] = 2;
-        maze1.printMaze(maze2);
-        //i++;
-        sleep(1);
+        //maze1.printMaze(maze2);
+        i++;
+
+        if(i % 1000000 == 0){
+            maze1.printMaze(maze2);
+            sleep(3);
+            cout << "i = " << i << endl;
+        }
+            
+        //cout << i;
+        //sleep(0.5);
 
         // Allora qua devo mettere una roba che poi svuota le celle dove era prima il pallino. Così non si vede il percorso fatto e non sembrano celle occupate. Maybe funziona
     }
 
-    /*
-    if(i == 9){
-        printf("No solution found");
+    
+    if(i == 10000000){
+        cout << "No solution found" << endl;
+        maze1.printMaze(maze2);
     }
     else{
-        printf("Solution found");
+        cout << "Solution found" << endl;
+        maze1.printMaze(maze2);
     }
-    */
+    
     
 }
