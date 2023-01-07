@@ -64,9 +64,6 @@ int main(){
             sleep(3);
             cout << "i = " << i << endl;
         }
-            
-        //cout << i;
-        //sleep(0.5);
 
         // Allora qua devo mettere una roba che poi svuota le celle dove era prima il pallino. Così non si vede il percorso fatto e non sembrano celle occupate. Maybe funziona
     }
