@@ -56,7 +56,7 @@ int main(){
             break;
         }
         maze2[ball[0]][ball[1]] = 2;
-        //maze1.printMaze(maze2);
+        //maze1.printMaze(maze2);  //Necessario per eventualmente vedere il percorso
         i++;
 
         if(i % 1000000 == 0){
