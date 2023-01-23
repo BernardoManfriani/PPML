@@ -15,8 +15,10 @@ to find the exit
 At the end it is necessary to evaluate a performance analysis (mainly the speed up)
 ### To build and run the project
 Enter into the subdirectory PW1. 
-$make
-$./maze.x
+
+$ make
+
+$ ./maze.x
 
 
-## PW2 to be determined
+## PW2 
