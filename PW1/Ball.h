@@ -15,10 +15,16 @@ class Ball{
         //void printBall(vector<int> ball);
         void move(MazeGenerator maze);
         vector<int> chooseDirection(int direction);
+        vector<vector<int>> getPath();
+         //find path
+        vector<vector<int>> findPath(vector<int> position);
+        
 
     private :
         vector<int> ball = {1,1};
         vector<vector<int>> maze1;
+        vector<vector<int>> path; 
+
 };
 
 

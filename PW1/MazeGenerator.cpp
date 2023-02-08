@@ -55,16 +55,16 @@ void MazeGenerator::printMaze(vector<vector<int>> maze){     //PROBLEMA: HA SENS
             }
             if (maze[i][j] == 1){
                 if (i > 0 && i < GRID_DIM - 1 && maze[i+1][j] == 1){
-                    cout << "|";     //for the vertical walls
+                    cout << "|";      //for the vertical walls
                 }else{
                     if(i == GRID_DIM - 1){
                         cout << "‾";  //for the last line
                     }else{
-                        cout << "_";  //for the first line and the other                            }
+                        cout << "_";  //for the first line and the other
                     }
                 }
             }else if(maze[i][j] == 0){
-                 cout << " ";      //for the empty space
+                 cout << " ";        //for the empty space
             }else if(maze[i][j] == 2){
                     cout << "•";
             }                        
@@ -143,3 +143,6 @@ vector<vector<int>> MazeGenerator::generateMaze(vector<vector<int>> maze){
     maze = generateRandomWalls(maze);
     return maze;
 }
+
+
+

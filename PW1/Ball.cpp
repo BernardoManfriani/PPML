@@ -6,12 +6,13 @@
 #include <unistd.h>
 #include "Ball.h"
 #include "MazeGenerator.h"
+#include <algorithm>
 
 
 
 Ball::Ball(vector<int> ballPos, MazeGenerator maze){
     maze1 = maze.getMaze();    //inizializzo il maze
-    move(maze);
+    move(maze);  //faccio muovere il pallino
 }
 
 void Ball::move(MazeGenerator maze){
@@ -22,6 +23,18 @@ void Ball::move(MazeGenerator maze){
     while ((ball[0] != GRID_DIM - 1 || ball[1] != GRID_DIM - 2) && iteration < 10000000){ 
         direction = rand() % 4;
         ball = chooseDirection(direction);
+
+
+        //se ball non è contenuto in path allora push_back
+        bool isPresent = true;
+        isPresent = std::find(path.begin(), path.end(), ball) != path.end();    //se ball è presente in path allora isPresent = true
+        if(isPresent)
+            path.erase(std::remove(path.begin(), path.end(), ball), path.end()); //se ball è presente in path allora lo elimino
+        if(!isPresent)                                                          //se ball non è presente in path allora isPresent = false
+            path.push_back(ball);                                               //quindi push_back ball in path    
+
+        
+
         maze1[ball[0]][ball[1]] = 2;
         //maze1.printMaze(maze2);  //Necessario per eventualmente vedere il percorso
 
@@ -52,27 +65,45 @@ vector<int> Ball::chooseDirection(int direction){
         case 0:
             if (maze1[ball[0]][ball[1] + 1] == 0 || maze1[ball[0]][ball[1] + 1]  == 2){  //right
                 ball[1] = ball[1] + 1; 
+                //path.push_back(ball[0]);
             }
             break;
         case 1:
             if (maze1[ball[0] + 1][ball[1]] == 0 || maze1[ball[0] + 1][ball[1]]  == 2){  //down
                 ball[0] = ball[0] + 1;
+                //path.push_back(ball[0]);
             }
             break;
         case 2:
             if (maze1[ball[0]][ball[1] - 1] == 0 || maze1[ball[0]][ball[1] - 1]  == 2){  //left
                 ball[1] = ball[1] - 1;
+                //path.push_back(ball[0]);
             }
             break;
         case 3:
             if (ball[0] > 0 && (maze1[ball[0] - 1][ball[1]] == 0 || maze1[ball[0] - 1][ball[1]]  == 2)){  //up
                 ball[0] = ball[0] - 1;
+                //path.push_back(ball[0]);
             }
             break;
         default:
-            break;
+            direction = rand() % 4;
+            ball = chooseDirection(direction);
     }
     
     return ball;
 }
+
+vector<vector<int>> Ball::findPath(vector<int> position){ //Backtracking the path of the ball insert in path vector the path of the ball
+    
+    return path;                            
+
+}
+
+vector<vector<int>> Ball::getPath(){
+    return path;
+}
+
+
+
 
