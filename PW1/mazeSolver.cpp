@@ -40,6 +40,22 @@ int main(){
     
     maze1.printMaze(maze2);
     
+    /*
+    //per ogni punto senza vicini elimino il punto 
+    for(int i = 0; i < GRID_DIM - 1; i++){
+        for(int j = 0 ; j < GRID_DIM - 1; j++){
+            if (i > 0 && j > 0 && maze2[i][j] == 2){
+                if((maze2[i + 1][j] == 0 || maze2[i + 1][j] == 1) && (maze2[i - 1][j] == 0 || maze2[i - 1][j] == 1) && (maze2[i][j + 1] == 0 || maze2[i][j + 1] == 1) && (maze2[i][j - 1] == 0 || maze2[i][j - 1] == 1)){
+                        maze2[i][j] = 0;
+                }
+            }
+        }
+    }
+    */
+
+    maze1.printMaze(maze2);
+
+
     return 0;
     
 }

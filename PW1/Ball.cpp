@@ -21,27 +21,30 @@ void Ball::move(MazeGenerator maze){
     int direction;
 
     while ((ball[0] != GRID_DIM - 1 || ball[1] != GRID_DIM - 2) && iteration < 10000000){ 
-        direction = rand() % 4;
-        ball = chooseDirection(direction);
-
-
-        //se ball non è contenuto in path allora push_back
+        direction = rand() % 4;  //random direction for the ball
+        //vector<int> tmp;  //tmp is the ball position before the move
+        //tmp = ball;  //tmp is the ball position before the move
+        ball = chooseDirection(direction);  //choose the direction for the ball
+        
+        /*
+        //se tmp non è contenuto in path allora push_back
         bool isPresent = true;
         isPresent = std::find(path.begin(), path.end(), ball) != path.end();    //se ball è presente in path allora isPresent = true
         if(isPresent)
+            path.erase(std::remove(path.begin(), path.end(), tmp), path.end()); //se tmp è presente in path allora lo elimino
             path.erase(std::remove(path.begin(), path.end(), ball), path.end()); //se ball è presente in path allora lo elimino
-        if(!isPresent)                                                          //se ball non è presente in path allora isPresent = false
+        if(!isPresent)                                                          //se ball non è presente in path allora isPresent = false*/
             path.push_back(ball);                                               //quindi push_back ball in path    
 
         
 
-        maze1[ball[0]][ball[1]] = 2;
+        maze1[ball[0]][ball[1]] = 2;  //put the ball in the maze
         //maze1.printMaze(maze2);  //Necessario per eventualmente vedere il percorso
 
         iteration++;
-        if(iteration % 1000000 == 0){
+        if(iteration % 500000 == 0){
             maze.printMaze(maze1);
-            sleep(3);
+            //sleep(3);
             cout << "i = " << iteration << endl;
         }
 

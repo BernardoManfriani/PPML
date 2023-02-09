@@ -65,7 +65,7 @@ void MazeGenerator::printMaze(vector<vector<int>> maze){     //PROBLEMA: HA SENS
                 }
             }else if(maze[i][j] == 0){
                  cout << " ";        //for the empty space
-            }else if(maze[i][j] == 2){
+            }else if(maze[i][j] == 2){  //for the path 
                     cout << "•";
             }                        
         }
