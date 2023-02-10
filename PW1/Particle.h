@@ -1,5 +1,5 @@
-#ifndef BALL_H
-#define BALL_H
+#ifndef PARTICLE_H
+#define PARTICLE_H
 
 #include <vector>
 #include <iostream>
@@ -9,19 +9,23 @@
 
 using namespace std;
 
-class Ball{
+class Particle{
     public : 
-        Ball(vector<int> ball, MazeGenerator maze);
-        //void printBall(vector<int> ball);
+        Particle(vector<int> particle, MazeGenerator maze);
+        //void printParticle(vector<int> particle);
         void move(MazeGenerator maze);
         vector<int> chooseDirection(int direction);
+        void moveRight();
+        void moveDown();
+        void moveLeft();
+        void moveUp();
         vector<vector<int>> getPath();
          //find path
         vector<vector<int>> findPath(vector<int> position);
         
 
     private :
-        vector<int> ball = {1,1};
+        vector<int> particle = {1,1};
         vector<vector<int>> maze1;
         vector<vector<int>> path; 
 

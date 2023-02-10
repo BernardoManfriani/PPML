@@ -2,5 +2,5 @@
 
 #compiling
 all: maze
-	g++  MazeGenerator.cpp mazeSolver.cpp Ball.cpp -o maze.x
+	g++  MazeGenerator.cpp main.cpp Particle.cpp -o maze.x
 

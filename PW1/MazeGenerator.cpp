@@ -7,15 +7,29 @@
 using namespace std; //for omitting std::
 
 
-// voidprintMaze(int maze[GRID_DIM][GRID_DIM]);
-// void generateMaze(int maze[GRID_DIM][GRID_DIM]);
-
-
 MazeGenerator::MazeGenerator(vector<vector<int>> matrix){
     maze = matrix;
     generateMaze(maze);
     //printMazeDot(generateMaze(maze));
 }
+
+void MazeGenerator::printMaze(vector<vector<int>> maze, int type){
+    switch (type){
+    case 0:
+        printFancyMaze(maze);
+        break;
+    case 1:
+        printMazeDot(maze);
+        break;
+    case 2:
+        printMazeMatrix(maze);
+        break;
+    default:
+        break;
+    }
+
+}
+
 void MazeGenerator::printMazeDot(vector<vector<int>> maze){
         for(int i = 0; i < GRID_DIM; i++){
             for(int j = 0; j < GRID_DIM; j++){
@@ -43,7 +57,7 @@ void MazeGenerator::printMazeMatrix(vector<vector<int>> maze){
         cout << endl;
     }
 }
-void MazeGenerator::printMaze(vector<vector<int>> maze){     //PROBLEMA: HA SENSO PASSARE UNA MATRICE COME PARAMETRO? NON POSSO USARE LA MATRICE CHE HO DEFINITO NELLA CLASSE? 
+void MazeGenerator::printFancyMaze(vector<vector<int>> maze){     //PROBLEMA: HA SENSO PASSARE UNA MATRICE COME PARAMETRO? NON POSSO USARE LA MATRICE CHE HO DEFINITO NELLA CLASSE? 
     for(int i = 0; i < GRID_DIM; i++){
         for(int j = 0; j < GRID_DIM; j++){
             if(i == 0 && j == 1){

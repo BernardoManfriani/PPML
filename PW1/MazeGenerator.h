@@ -14,8 +14,9 @@ const int GRID_DIM = 101;
 class MazeGenerator{
     public :
         MazeGenerator(vector<vector<int>> matrix);
-        void printMaze(vector<vector<int>> maze);
+        void printMaze(vector<vector<int>> maze, int type);
         void printMazeDot(vector<vector<int>> maze);
+        void printFancyMaze(vector<vector<int>> maze);
         void printMazeMatrix(vector<vector<int>> maze);
         vector<vector<int>> getMaze();
 

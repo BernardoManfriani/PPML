@@ -4,7 +4,7 @@
 #include<vector>
 #include<iostream>
 #include"MazeGenerator.h"
-#include"Ball.h"
+#include"Particle.h"
 #include<unistd.h>
 
 using namespace std;
@@ -19,10 +19,10 @@ int main(){
  
     //maze1.printMaze(maze2);    //print maze
 
-    //vector<int> ballPosition{1,1};   //ball initialization
-    Ball ball({1,1}, maze1);    //ball initialization
+    //vector<int> particlePosition{1,1};   //particle initialization
+    Particle particle({1,1}, maze1);    //particle initialization
 
-    vector<vector<int>> path = ball.getPath();  //path initialization
+    vector<vector<int>> path = particle.getPath();  //path initialization
 
     //cout << path[0].size() << endl;
     //print path
@@ -38,9 +38,9 @@ int main(){
         maze2[path[i][0]][path[i][1]] = 2;
     }
     
-    maze1.printMaze(maze2);
+    //maze1.printMaze(maze2, 0);
     
-    /*
+    
     //per ogni punto senza vicini elimino il punto 
     for(int i = 0; i < GRID_DIM - 1; i++){
         for(int j = 0 ; j < GRID_DIM - 1; j++){
@@ -51,9 +51,9 @@ int main(){
             }
         }
     }
-    */
+    
 
-    maze1.printMaze(maze2);
+    maze1.printMaze(maze2, 0);
 
 
     return 0;
