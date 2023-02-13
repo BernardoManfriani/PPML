@@ -17,8 +17,8 @@ int main(){
 
     vector<vector<int>> maze2 = maze1.getMaze(); //inserisco in una matrice il maze generato dalla classe
  
-    //maze1.printMaze(maze2);    //print maze
-
+    //maze1.printMaze(maze2, 0); //print maze
+    
     //vector<int> particlePosition{1,1};   //particle initialization
     Particle particle({1,1}, maze1);    //particle initialization
 

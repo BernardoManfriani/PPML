@@ -21,13 +21,15 @@ class Particle{
         void moveUp();
         vector<vector<int>> getPath();
          //find path
-        vector<vector<int>> findPath(vector<int> position);
+        
         
 
     private :
         vector<int> particle = {1,1};
         vector<vector<int>> maze1;
         vector<vector<int>> path; 
+        void findPath();
+        void solutionFind(int iteration, MazeGenerator maze);
 
 };
 
