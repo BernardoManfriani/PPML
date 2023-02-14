@@ -7,7 +7,7 @@
 #include "Particle.h"
 #include "MazeGenerator.h"
 #include <algorithm>
-
+#include <chrono>
 
 
 Particle::Particle(vector<int> particlePos, MazeGenerator maze){
@@ -16,31 +16,45 @@ Particle::Particle(vector<int> particlePos, MazeGenerator maze){
 }
 
 void Particle::move(MazeGenerator maze){
-    int iteration = 0;                              //counter for the while loop
-    srand(time(NULL));
-    int direction;
-    vector<int> particleTmp = particle;  
-    
-    while ((particle[0] != GRID_DIM - 1 || particle[1] != GRID_DIM - 2) && iteration < 10000000){ 
-        do{
-            direction = rand() % 4;                 //random direction for the particle
-            particle = chooseDirection(direction);  //choose the direction for the particle
-        }while(particleTmp == particle);
+    int i = 0;
+    int iteration;
+    int direction; 
+    vector<int> particleTmp;                    //particle position
+    auto start = chrono::high_resolution_clock::now(); //start time
+    while(i < 2){
+        iteration = 0;                              //counter for the while loop
+        srand(time(NULL));
+        particle = {1,1};                           //particle position
+        particleTmp = particle;                     //save the particle position 
+        while ((particle[0] != GRID_DIM - 1 || particle[1] != GRID_DIM - 2) && iteration < 10000000){ 
+            do{
+                direction = rand() % 4;                 //random direction for the particle
+                particle = chooseDirection(direction);  //choose the direction for the particle
+            }while(particleTmp == particle);
 
-        particleTmp = particle;                     //save the particle position
+            particleTmp = particle;                     //save the particle position
 
-        findPath();                                 //generate the path
-    
-        maze1[particle[0]][particle[1]] = 2;        //put the particle in the maze
+            findPath();                                 //generate the path
+        
+            maze1[particle[0]][particle[1]] = 2;        //put the particle in the maze
 
-        iteration++;
-        if(iteration % 500000 == 0){
-            maze.printMaze(maze1,0);
-            //sleep(3);
-            cout << "i = " << iteration << endl;
+            iteration++;
+            /*
+            if(iteration % 500000 == 0){
+                maze.printMaze(maze1,0);
+                //sleep(3);
+                cout << "i = " << iteration << endl;
+            }*/
         }
-
+        i++;
     }
+
+    auto finish = chrono::high_resolution_clock::now(); //end time
+
+    chrono::duration<double> elapsed = finish - start; //[TO-DO] elapsed time in seconds NON SONO SICURO CHE SIA IN SECONDO CONTROLLARE
+    elapsed = elapsed / 2;                          //avg elapsed time
+    cout << "Elapsed time: " << elapsed.count() << endl;
+
     solutionFind(iteration, maze);
 }
 
@@ -51,7 +65,7 @@ void Particle::solutionFind(int iteration, MazeGenerator maze){
     else{
         cout << "Solution found" << endl;
     }
-    maze.printMaze(maze1, 0);
+    //maze.printMaze(maze1, 0);
 }
 void Particle::moveRight() {
     if (maze1[particle[0]][particle[1] + 1] == 0 || maze1[particle[0]][particle[1] + 1] == 2) {

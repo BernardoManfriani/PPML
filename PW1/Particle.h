@@ -25,7 +25,7 @@ class Particle{
         
 
     private :
-        vector<int> particle = {1,1};
+        vector<int> particle;
         vector<vector<int>> maze1;
         vector<vector<int>> path; 
         void findPath();

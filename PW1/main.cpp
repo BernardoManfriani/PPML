@@ -53,7 +53,7 @@ int main(){
     }
     
 
-    maze1.printMaze(maze2, 0);
+    //maze1.printMaze(maze2, 0);
 
 
     return 0;
