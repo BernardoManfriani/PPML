@@ -20,5 +20,12 @@ $ make
 
 $ ./maze.x
 
+### To build and run the project in Open MP
+Enter into the subdirectory PW1
+
+$ g++ main.cpp MazeGenerator.cpp Particle.cpp -fopenmp -o maze
+
+$ ./maze
+
 
 ## PW2 
