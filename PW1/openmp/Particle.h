@@ -6,6 +6,7 @@
 #include <stdlib.h>	//for rand()
 #include <time.h>	//for time()
 #include "MazeGenerator.h"
+#include <omp.h>
 
 using namespace std;
 

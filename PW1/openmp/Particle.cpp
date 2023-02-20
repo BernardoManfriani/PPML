@@ -7,7 +7,9 @@
 #include "Particle.h"
 #include "MazeGenerator.h"
 #include <algorithm>
+#include <chrono>
 #include <omp.h>
+
 
 Particle::Particle(vector<int> particlePos, MazeGenerator maze){
     maze1 = maze.getMaze();    //initilize the maze
@@ -15,54 +17,63 @@ Particle::Particle(vector<int> particlePos, MazeGenerator maze){
 }
 
 void Particle::move(MazeGenerator maze){
-    int iteration = 0;// shared loop counter for the while loop
-    srand(time(NULL));
-    int direction;
-    vector<int> particleTmp = particle;  
-    //omp_set_num_threads(8);
-    int threadNumber; 
-#pragma omp parallel //private(threadNumber)
-    {
-        threadNumber = omp_get_thread_num();
-        while ((particle[0] != GRID_DIM - 1 || particle[1] != GRID_DIM - 2) && iteration < 10000000){ 
-            do{
-                direction = rand() % 4;                 //random direction for the particle
-                particle = chooseDirection(direction);  //choose the direction for the particle
-            }while(particleTmp == particle);
-
-            particleTmp = particle;                     //save the particle position
-
-            findPath();                                 //generate the path
-            
-            maze1[particle[0]][particle[1]] = 2;        //put the particle in the maze
-#pragma omp critical
-            {
-                iteration++;
-
+    int direction, numThreads, threadID; 
+    vector<int> particleTmp = particle;                    //particle position
+    //auto start = chrono::high_resolution_clock::now(); //start time
+    //for(int i = 0; i < 100; i++){
+    //int iteration = 0;
+        srand(time(NULL));
+        //particle = {1,1};                           //particle position
+        //particleTmp = particle;                     //save the particle position
+#pragma omp parallel
+        {   
+            /*
+            numThreads = omp_get_num_threads();
+            threadID = omp_get_thread_num();
+            if(threadID == 0){
+                cout << "Number of threads: " << numThreads << endl;
+                cout << "sono il master del mondo" << endl;
             }
-            //threadIteration = iteration;
-            
-            if(iteration % 500000 == 0){
-                //maze.printMaze(maze1,0);
-                //sleep(3);
-                //cout << "i = " << iteration << endl;
+            else{
+                cout << "sono il thread " << threadID << endl;
             }
+            cout << "Thread ID: " << threadID << endl;*/
+            while (particle[0] != GRID_DIM - 1 || particle[1] != GRID_DIM - 2){ 
+                //cout << "sono nel while " << threadID << endl;
+                do{
+                    direction = rand() % 4;                 //random direction for the particle
+                    particle = chooseDirection(direction);  //choose the direction for the particle
+                }while(particleTmp == particle);
+                particleTmp = particle;                     //save the particle position
 
+                findPath();                                 //generate the path
+            
+                maze1[particle[0]][particle[1]] = 2;        //put the particle in the maze
+                //iteration++;
+            }
+            cout << "Solution found" << endl;
+            //clear the maze
+            for(int i = 0; i < GRID_DIM; i++){
+                for(int j = 0; j < GRID_DIM; j++){
+                    if(maze1[i][j] == 2){
+                        maze1[i][j] = 0;
+                    }
+                }
+            }
         }
-    }
+
+    //}
+
+    //auto finish = chrono::high_resolution_clock::now(); //end time
+
+    //chrono::duration<double> elapsed = finish - start;  //elapsed time 
+    //elapsed = elapsed / 100;                           //avg elapsed time
+    //cout << "Elapsed time: " << elapsed.count() << endl;
+
     
-    solutionFind(iteration, maze);
+
 }
 
-void Particle::solutionFind(int iteration, MazeGenerator maze){
-    if(iteration == 10000000){
-        cout << "No solution found" << endl;
-    }
-    else{
-        cout << "Solution found" << endl;
-    }
-    //maze.printMaze(maze1, 0);
-}
 void Particle::moveRight() {
     if (maze1[particle[0]][particle[1] + 1] == 0 || maze1[particle[0]][particle[1] + 1] == 2) {
         particle[1] = particle[1] + 1;
