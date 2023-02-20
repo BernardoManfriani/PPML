@@ -11,7 +11,7 @@
 #include <ratio>
 #include <chrono>
 
-#define MAX_ITERATIONS 5000
+#define MAX_ITERATIONS 10
 
 using namespace std;
 //using namespace std::chrono;
@@ -74,7 +74,7 @@ int main(){
     //duration<double> time_span = duration_cast<duration<double>>(t2 - t1);
     end = omp_get_wtime();
 
-    maze1.printMaze(maze2, 0);
+    //maze1.printMaze(maze2, 0);
     
     std::cout << "It took me " << (end-start)/MAX_ITERATIONS << " seconds.";
     std::cout << endl;

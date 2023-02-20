@@ -43,9 +43,9 @@ void Particle::move(MazeGenerator maze){
             //threadIteration = iteration;
             
             if(iteration % 500000 == 0){
-                maze.printMaze(maze1,0);
+                //maze.printMaze(maze1,0);
                 //sleep(3);
-                cout << "i = " << iteration << endl;
+                //cout << "i = " << iteration << endl;
             }
 
         }
@@ -61,7 +61,7 @@ void Particle::solutionFind(int iteration, MazeGenerator maze){
     else{
         cout << "Solution found" << endl;
     }
-    maze.printMaze(maze1, 0);
+    //maze.printMaze(maze1, 0);
 }
 void Particle::moveRight() {
     if (maze1[particle[0]][particle[1] + 1] == 0 || maze1[particle[0]][particle[1] + 1] == 2) {

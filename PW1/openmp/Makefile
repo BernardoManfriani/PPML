@@ -1,6 +1,8 @@
 #compiler
 
 #compiling
-all: maze
-	g++  MazeGenerator.cpp main.cpp Particle.cpp -o maze.x
+CXX = g++
+CXXFLAGS = -std=c++11
+all: 
+	g++ -fopenmp MazeGenerator.cpp main.cpp Particle.cpp -o maze.x
 
