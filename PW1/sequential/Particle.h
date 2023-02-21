@@ -29,8 +29,6 @@ class Particle{
         vector<vector<int>> maze1;
         vector<vector<int>> path; 
         void findPath();
-        void solutionFind(int iteration, MazeGenerator maze);
-
 };
 
 

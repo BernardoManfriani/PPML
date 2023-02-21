@@ -16,17 +16,14 @@ Particle::Particle(vector<int> particlePos, MazeGenerator maze){
 }
 
 void Particle::move(MazeGenerator maze){
-    int i = 0;
-    int iteration;
     int direction; 
-    vector<int> particleTmp;                    //particle position
+    vector<int> particleTmp;                           //particle position
     auto start = chrono::high_resolution_clock::now(); //start time
-    while(i < 100){
-        iteration = 0;                              //counter for the while loop
+    for(int i = 0; i < 100; i++){
         srand(time(NULL));
         particle = {1,1};                           //particle position
         particleTmp = particle;                     //save the particle position 
-        while ((particle[0] != GRID_DIM - 1 || particle[1] != GRID_DIM - 2) && iteration < 10000000){ 
+        while (particle[0] != GRID_DIM - 1 || particle[1] != GRID_DIM - 2){ 
             do{
                 direction = rand() % 4;                 //random direction for the particle
                 particle = chooseDirection(direction);  //choose the direction for the particle
@@ -37,16 +34,7 @@ void Particle::move(MazeGenerator maze){
             findPath();                                 //generate the path
         
             maze1[particle[0]][particle[1]] = 2;        //put the particle in the maze
-
-            iteration++;
-            /*
-            if(iteration % 500000 == 0){
-                maze.printMaze(maze1,0);
-                //sleep(3);
-                cout << "i = " << iteration << endl;
-            }*/
         }
-        i++;
     }
 
     auto finish = chrono::high_resolution_clock::now(); //end time
@@ -55,18 +43,10 @@ void Particle::move(MazeGenerator maze){
     elapsed = elapsed / 100;                           //avg elapsed time
     cout << "Elapsed time: " << elapsed.count() << endl;
 
-    solutionFind(iteration, maze);
+    cout << "Solution found" << endl;
+
 }
 
-void Particle::solutionFind(int iteration, MazeGenerator maze){
-    if(iteration == 10000000){
-        cout << "No solution found" << endl;
-    }
-    else{
-        cout << "Solution found" << endl;
-    }
-    //maze.printMaze(maze1, 0);
-}
 void Particle::moveRight() {
     if (maze1[particle[0]][particle[1] + 1] == 0 || maze1[particle[0]][particle[1] + 1] == 2) {
         particle[1] = particle[1] + 1;
