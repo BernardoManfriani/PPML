@@ -9,7 +9,7 @@ using namespace std; //for omitting std::
 
 MazeGenerator::MazeGenerator(vector<vector<int>> matrix){
     maze = matrix;
-    generateMaze(maze);
+    maze = generateMaze(maze);
     //printMazeDot(generateMaze(maze));
 }
 
@@ -89,7 +89,7 @@ void MazeGenerator::printFancyMaze(vector<vector<int>> maze){     //PROBLEMA: HA
 
         
 vector<vector<int>> MazeGenerator::getMaze(){ //returns maze
-            return generateMaze(maze);
+            return maze;
 }
 
 
