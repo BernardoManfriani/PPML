@@ -30,7 +30,9 @@ void Particle::move(MazeGenerator maze){
     omp_set_num_threads(4); // Use 4 threads for all consecutive parallel regions
     //maze1 = maze.getMaze();
 #pragma omp parallel private(numThreads, threadID, direction, particleTmp, maze1, particle, path)
-{   
+{       
+        vector<int> particleT = {1,1};                           //particle position
+
         numThreads = omp_get_num_threads();
         threadID = omp_get_thread_num();
         if(threadID == 0){
@@ -46,31 +48,33 @@ void Particle::move(MazeGenerator maze){
         maze1 = maze.getMaze();	
 #pragma omp critical
         maze.printMaze(maze1, 0);                      //print the maze
+        sleep(1);
         //sleep(4);
         //barrier
 #pragma omp barrier
         //srand(time(NULL));
-        particle = {1,1};                           //particle position
-        particleTmp = particle;                     //save the particle position
+        particleT = {1,1};                           //particle position
+        particleTmp = particleT;                     //save the particle position
         //direction = 1;
-        while(particle[0] != GRID_DIM - 1 || particle[1] != GRID_DIM - 2){ 
+        //cout << "sono dopo il barrier " << threadID << endl;
+        while(particleT[0] != GRID_DIM - 1 || particleT[1] != GRID_DIM - 2){ 
             //cout << "sono nel while " << threadID << endl;
 #pragma omp critical
         {
             do{
                 direction = rand() % 4;                 //random direction for the particle
                 //cout << "sono nel do " << threadID << endl;
-                particle = chooseDirection(direction);  //choose the direction for the particle
+                particleT = chooseDirection(direction, particleT);  //choose the direction for the particle
                 //cout << "sono dopo choose direction " << threadID << "  " << direction << endl;
-            }while(particleTmp == particle);
+            }while(particleTmp == particleT);
         }
-            particleTmp = particle;                     //save the particle position 
+            particleTmp = particleT;                     //save the particle position 
 #pragma omp critical
 {
-            findPath();                                 //generate the path
+            findPath(particleT);                                 //generate the path
 }
-            cout << "posizione    " << particle[0] << "-" << particle[1] << endl;
-            maze1[particle[0]][particle[1]] = 2;        //put the particle in the maze
+            cout << "posizione    " << particleT[0] << "-" << particleT[1] << "Sono il thread: " << threadID << endl;
+            maze1[particleT[0]][particleT[1]] = 2;        //put the particle in the maze
             //iteration++;
 //#pragma omp critical
 //{
@@ -79,11 +83,14 @@ void Particle::move(MazeGenerator maze){
             //sleep(0.5);
             //usleep(1000000);
 //}
-
-
         }
-}   
+#pragma omp barrier
         cout << "Solution found" << endl;
+#pragma omp critical
+        maze.printMaze(maze1, 0);                      //print the maze
+        sleep(4);
+}   
+
         //clear the maze
         /*
         for(int i = 0; i < GRID_DIM; i++){
@@ -102,54 +109,62 @@ void Particle::move(MazeGenerator maze){
 }
 
 
-void Particle::moveRight() {
-    if (maze1[particle[0]][particle[1] + 1] == 0 || maze1[particle[0]][particle[1] + 1] == 2) {
-        particle[1] = particle[1] + 1;
+vector<int> Particle::moveRight(vector<int> particleT) {
+    if (maze1[particleT[0]][particleT[1] + 1] == 0 || maze1[particleT[0]][particleT[1] + 1] == 2) {
+        particleT[1] = particleT[1] + 1;
+        cout << "sono nel move right" << endl;
     }
+    return particleT;
 }
 
-void Particle::moveDown() {
-    if (maze1[particle[0] + 1][particle[1]] == 0 || maze1[particle[0] + 1][particle[1]] == 2) {
-        particle[0] = particle[0] + 1;
+vector<int> Particle::moveDown(vector<int> particleT) {
+    if (maze1[particleT[0] + 1][particleT[1]] == 0 || maze1[particleT[0] + 1][particleT[1]] == 2) {
+        particleT[0] = particleT[0] + 1;
+        cout << "sono nel move down" << endl;
     }
+    return particleT;
 }
 
-void Particle::moveLeft() {
-    if (maze1[particle[0]][particle[1] - 1] == 0 || maze1[particle[0]][particle[1] - 1] == 2) {
-        particle[1] = particle[1] - 1;
+vector<int> Particle::moveLeft(vector<int> particleT) {
+    if (maze1[particleT[0]][particleT[1] - 1] == 0 || maze1[particleT[0]][particleT[1] - 1] == 2) {
+        particleT[1] = particleT[1] - 1;
+        cout << "sono nel move left" << endl;
     }
+    return particleT;
 }
 
-void Particle::moveUp() {
-    if (particle[0] > 0 && (maze1[particle[0] - 1][particle[1]] == 0 || maze1[particle[0] - 1][particle[1]] == 2)) {
-        particle[0] = particle[0] - 1;
+vector<int> Particle::moveUp(vector<int> particleT) {
+    if (particleT[0] > 0 && (maze1[particleT[0] - 1][particleT[1]] == 0 || maze1[particleT[0] - 1][particleT[1]] == 2)) {
+        particleT[0] = particleT[0] - 1;
+        cout << "sono nel move up" << endl;
     }
+    return particleT;
 }
 
-vector<int> Particle::chooseDirection(int direction) {
+vector<int> Particle::chooseDirection(int direction, vector<int> particleT) {
     switch (direction) {
         case 0:
-            moveRight();
+            particleT = moveRight(particleT);
             break;
         case 1:
-            moveDown();
+            particleT = moveDown(particleT);
             break;
         case 2:
-            moveLeft();
+            particleT = moveLeft(particleT);
             break;
         case 3:
-            moveUp();
+            particleT = moveUp(particleT);
             break;
     }
-    return particle;
+    return particleT;
 }
 
-void Particle::findPath(){                                                                                        //Backtracking the path of the particle insert in path vector the path of the particle
-    if(path.size() > 2 && (path[path.size() - 2][0] == particle[0] && path[path.size() - 2][1] == particle[1])){  //if the particle is in the same direction of the previous one
+void Particle::findPath(vector<int> particleT){                                                                                        //Backtracking the path of the particle insert in path vector the path of the particle
+    if(path.size() > 2 && (path[path.size() - 2][0] == particleT[0] && path[path.size() - 2][1] == particleT[1])){  //if the particle is in the same direction of the previous one
         path.erase(path.end()); 
         path.erase(path.end() - 1);
     } else { 
-        path.push_back(particle);
+        path.push_back(particleT);
     }
 
     //bool isPresent = true;        
