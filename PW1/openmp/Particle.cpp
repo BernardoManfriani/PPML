@@ -19,7 +19,7 @@ Particle::Particle(vector<int> particlePos, MazeGenerator maze){
 void Particle::move(MazeGenerator maze){
     int direction, numThreads, threadID; 
     vector<int> particleTmp = particle;                    //particle position
-    //auto start = chrono::high_resolution_clock::now(); //start time
+    auto start = chrono::high_resolution_clock::now(); //start time
     //for(int i = 0; i < 100; i++){
     //int iteration = 0;
     //srand(time(NULL));
@@ -27,7 +27,7 @@ void Particle::move(MazeGenerator maze){
     //particleTmp = particle;                     //save the particle position
 
     omp_set_dynamic(0);     // Explicitly disable dynamic teams
-    omp_set_num_threads(4); // Use 4 threads for all consecutive parallel regions
+    omp_set_num_threads(8); // Use 4 threads for all consecutive parallel regions
     //maze1 = maze.getMaze();
 #pragma omp parallel private(numThreads, threadID, direction, particleTmp, maze1, particle, path)
 {       
@@ -36,7 +36,7 @@ void Particle::move(MazeGenerator maze){
         numThreads = omp_get_num_threads();
         threadID = omp_get_thread_num();
         if(threadID == 0){
-            cout << "Number of threads: " << numThreads << endl;
+            //cout << "Number of threads: " << numThreads << endl;
             //cout << "sono il master del mondo" << endl;
         }
         else{
@@ -46,12 +46,12 @@ void Particle::move(MazeGenerator maze){
         //cout << "Thread ID: " << threadID << endl;
         //srand(7634567);
         maze1 = maze.getMaze();	
-#pragma omp critical
+//#pragma omp critical //tolto questo
         maze.printMaze(maze1, 0);                      //print the maze
-        sleep(1);
+        //sleep(1);
         //sleep(4);
         //barrier
-#pragma omp barrier
+//#pragma omp barrier // tolto questo
         //srand(time(NULL));
         particleT = {1,1};                           //particle position
         particleTmp = particleT;                     //save the particle position
@@ -73,7 +73,7 @@ void Particle::move(MazeGenerator maze){
 {
             findPath(particleT);                                 //generate the path
 }
-            cout << "posizione    " << particleT[0] << "-" << particleT[1] << "Sono il thread: " << threadID << endl;
+            //cout << "posizione    " << particleT[0] << "-" << particleT[1] << "Sono il thread: " << threadID << endl;
             maze1[particleT[0]][particleT[1]] = 2;        //put the particle in the maze
             //iteration++;
 //#pragma omp critical
@@ -84,11 +84,11 @@ void Particle::move(MazeGenerator maze){
             //usleep(1000000);
 //}
         }
-#pragma omp barrier
+//#pragma omp barrier // ho provato a togliere questo barrier e funziona
         cout << "Solution found" << endl;
-#pragma omp critical
+//#pragma omp critical //tolto questo 
         maze.printMaze(maze1, 0);                      //print the maze
-        sleep(4);
+        //sleep(4);
 }   
 
         //clear the maze
@@ -101,18 +101,19 @@ void Particle::move(MazeGenerator maze){
             }
         }*/
 
-    //auto finish = chrono::high_resolution_clock::now(); //end time
+    auto finish = chrono::high_resolution_clock::now(); //end time
 
-    //chrono::duration<double> elapsed = finish - start;  //elapsed time 
+    chrono::duration<double> elapsed = finish - start;  //elapsed time 
     //elapsed = elapsed / 100;                           //avg elapsed time
-    //cout << "Elapsed time: " << elapsed.count() << endl;
+    cout << "Elapsed time: " << elapsed.count()/8 << endl;
+    cout << "Num Threads: " << numThreads << endl; //printa un valore sballato
 }
 
 
 vector<int> Particle::moveRight(vector<int> particleT) {
     if (maze1[particleT[0]][particleT[1] + 1] == 0 || maze1[particleT[0]][particleT[1] + 1] == 2) {
         particleT[1] = particleT[1] + 1;
-        cout << "sono nel move right" << endl;
+        //cout << "sono nel move right" << endl;
     }
     return particleT;
 }
@@ -120,7 +121,7 @@ vector<int> Particle::moveRight(vector<int> particleT) {
 vector<int> Particle::moveDown(vector<int> particleT) {
     if (maze1[particleT[0] + 1][particleT[1]] == 0 || maze1[particleT[0] + 1][particleT[1]] == 2) {
         particleT[0] = particleT[0] + 1;
-        cout << "sono nel move down" << endl;
+        //cout << "sono nel move down" << endl;
     }
     return particleT;
 }
@@ -128,7 +129,7 @@ vector<int> Particle::moveDown(vector<int> particleT) {
 vector<int> Particle::moveLeft(vector<int> particleT) {
     if (maze1[particleT[0]][particleT[1] - 1] == 0 || maze1[particleT[0]][particleT[1] - 1] == 2) {
         particleT[1] = particleT[1] - 1;
-        cout << "sono nel move left" << endl;
+        //cout << "sono nel move left" << endl;
     }
     return particleT;
 }
@@ -136,7 +137,7 @@ vector<int> Particle::moveLeft(vector<int> particleT) {
 vector<int> Particle::moveUp(vector<int> particleT) {
     if (particleT[0] > 0 && (maze1[particleT[0] - 1][particleT[1]] == 0 || maze1[particleT[0] - 1][particleT[1]] == 2)) {
         particleT[0] = particleT[0] - 1;
-        cout << "sono nel move up" << endl;
+        //cout << "sono nel move up" << endl;
     }
     return particleT;
 }

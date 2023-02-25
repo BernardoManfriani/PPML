@@ -11,7 +11,6 @@
 #include <ratio>
 #include <chrono>
 
-#define MAX_ITERATIONS 10
 
 using namespace std;
 //using namespace std::chrono;
