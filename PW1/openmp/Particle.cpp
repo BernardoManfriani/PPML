@@ -19,101 +19,67 @@ Particle::Particle(vector<int> particlePos, MazeGenerator maze){
 void Particle::move(MazeGenerator maze){
     int direction, numThreads, threadID; 
     vector<int> particleTmp = particle;                    //particle position
-    auto start = chrono::high_resolution_clock::now(); //start time
+    bool solutionFound = false;
+    //time is to take on the parallel section
     //for(int i = 0; i < 100; i++){
     //int iteration = 0;
-    //srand(time(NULL));
     //particle = {1,1};                           //particle position
     //particleTmp = particle;                     //save the particle position
 
     omp_set_dynamic(0);     // Explicitly disable dynamic teams
     omp_set_num_threads(8); // Use 4 threads for all consecutive parallel regions
     //maze1 = maze.getMaze();
-#pragma omp parallel private(numThreads, threadID, direction, particleTmp, maze1, particle, path)
-{       
-        vector<int> particleT = {1,1};                           //particle position
+#pragma omp parallel private(numThreads, threadID, direction, particleTmp, maze1, particle)
+{        
 
-        numThreads = omp_get_num_threads();
-        threadID = omp_get_thread_num();
-        if(threadID == 0){
-            //cout << "Number of threads: " << numThreads << endl;
-            //cout << "sono il master del mondo" << endl;
-        }
-        else{
-            //cout << "sono il thread " << threadID << endl;
-        }
-        //cout << "Thread ID: " << threadID << endl;
-        //cout << "Thread ID: " << threadID << endl;
-        //srand(7634567);
-        maze1 = maze.getMaze();	
-//#pragma omp critical //tolto questo
+    srand(time(NULL));
+    vector<int> particleT = {1,1};                           //particle position
+    vector<vector<int>> pathT;
+    numThreads = omp_get_num_threads();
+    threadID = omp_get_thread_num();
+    maze1 = maze.getMaze();	
+    if(threadID == 0){
         maze.printMaze(maze1, 0);                      //print the maze
-        //sleep(1);
-        //sleep(4);
-        //barrier
-//#pragma omp barrier // tolto questo
-        //srand(time(NULL));
+    }
+    auto start = chrono::high_resolution_clock::now();
+    for (size_t i = 0; i < 10; i++){
         particleT = {1,1};                           //particle position
         particleTmp = particleT;                     //save the particle position
-        //direction = 1;
-        //cout << "sono dopo il barrier " << threadID << endl;
         while(particleT[0] != GRID_DIM - 1 || particleT[1] != GRID_DIM - 2){ 
-            //cout << "sono nel while " << threadID << endl;
-#pragma omp critical
-        {
             do{
                 direction = rand() % 4;                 //random direction for the particle
-                //cout << "sono nel do " << threadID << endl;
                 particleT = chooseDirection(direction, particleT);  //choose the direction for the particle
-                //cout << "sono dopo choose direction " << threadID << "  " << direction << endl;
             }while(particleTmp == particleT);
-        }
+
             particleTmp = particleT;                     //save the particle position 
-#pragma omp critical
-{
-            findPath(particleT);                                 //generate the path
-}
-            //cout << "posizione    " << particleT[0] << "-" << particleT[1] << "Sono il thread: " << threadID << endl;
+            findPath(particleT, pathT);                                 //generate the path
+
             maze1[particleT[0]][particleT[1]] = 2;        //put the particle in the maze
-            //iteration++;
-//#pragma omp critical
-//{
-            //cout << "SONO IL THREAD "<< threadID << endl;
-            //maze.printMaze(maze1, 0);                      //print the maze
-            //sleep(0.5);
-            //usleep(1000000);
-//}
+            if(solutionFound) break;
         }
-//#pragma omp barrier // ho provato a togliere questo barrier e funziona
-        cout << "Solution found" << endl;
-//#pragma omp critical //tolto questo 
-        maze.printMaze(maze1, 0);                      //print the maze
-        //sleep(4);
-}   
-
-        //clear the maze
-        /*
-        for(int i = 0; i < GRID_DIM; i++){
-            for(int j = 0; j < GRID_DIM; j++){
-                if(maze1[i][j] == 2){
-                    maze1[i][j] = 0;
-                }
-            }
-        }*/
-
+    }
+    solutionFound = true;
     auto finish = chrono::high_resolution_clock::now(); //end time
 
     chrono::duration<double> elapsed = finish - start;  //elapsed time 
-    //elapsed = elapsed / 100;                           //avg elapsed time
-    cout << "Elapsed time: " << elapsed.count()/8 << endl;
-    cout << "Num Threads: " << numThreads << endl; //printa un valore sballato
+    elapsed = elapsed / 10;                           //avg elapsed time
+    if(particleT[0] == GRID_DIM - 1 && particleT[1] == GRID_DIM - 2){
+        cout << "Elapsed time: " << elapsed.count() << endl;
+        cout << "Solution found" << " thread: " << threadID << endl;
+        path.insert(path.end(), pathT.begin(), pathT.end());
+        maze.printMaze(maze1, 0);                      //print the maze
+    }
+    //double finish = omp_get_wtime();
+    //double elapsed = finish - start;
+    //cout << "Elapsed time: " << elapsed << "  Thread: " << threadID << endl;
+}
+    
 }
 
 
 vector<int> Particle::moveRight(vector<int> particleT) {
     if (maze1[particleT[0]][particleT[1] + 1] == 0 || maze1[particleT[0]][particleT[1] + 1] == 2) {
         particleT[1] = particleT[1] + 1;
-        //cout << "sono nel move right" << endl;
     }
     return particleT;
 }
@@ -121,7 +87,6 @@ vector<int> Particle::moveRight(vector<int> particleT) {
 vector<int> Particle::moveDown(vector<int> particleT) {
     if (maze1[particleT[0] + 1][particleT[1]] == 0 || maze1[particleT[0] + 1][particleT[1]] == 2) {
         particleT[0] = particleT[0] + 1;
-        //cout << "sono nel move down" << endl;
     }
     return particleT;
 }
@@ -129,7 +94,6 @@ vector<int> Particle::moveDown(vector<int> particleT) {
 vector<int> Particle::moveLeft(vector<int> particleT) {
     if (maze1[particleT[0]][particleT[1] - 1] == 0 || maze1[particleT[0]][particleT[1] - 1] == 2) {
         particleT[1] = particleT[1] - 1;
-        //cout << "sono nel move left" << endl;
     }
     return particleT;
 }
@@ -137,7 +101,6 @@ vector<int> Particle::moveLeft(vector<int> particleT) {
 vector<int> Particle::moveUp(vector<int> particleT) {
     if (particleT[0] > 0 && (maze1[particleT[0] - 1][particleT[1]] == 0 || maze1[particleT[0] - 1][particleT[1]] == 2)) {
         particleT[0] = particleT[0] - 1;
-        //cout << "sono nel move up" << endl;
     }
     return particleT;
 }
@@ -160,12 +123,12 @@ vector<int> Particle::chooseDirection(int direction, vector<int> particleT) {
     return particleT;
 }
 
-void Particle::findPath(vector<int> particleT){                                                                                        //Backtracking the path of the particle insert in path vector the path of the particle
-    if(path.size() > 2 && (path[path.size() - 2][0] == particleT[0] && path[path.size() - 2][1] == particleT[1])){  //if the particle is in the same direction of the previous one
-        path.erase(path.end()); 
-        path.erase(path.end() - 1);
+void Particle::findPath(vector<int> particleT, vector<vector<int>> pathT){                                                                                        //Backtracking the path of the particle insert in path vector the path of the particle
+    if(pathT.size() > 2 && (pathT[pathT.size() - 2][0] == particleT[0] && pathT[pathT.size() - 2][1] == particleT[1])){  //if the particle is in the same direction of the previous one
+        pathT.erase(pathT.end()); 
+        pathT.erase(pathT.end() - 1);
     } else { 
-        path.push_back(particleT);
+        pathT.push_back(particleT);
     }
 
     //bool isPresent = true;        

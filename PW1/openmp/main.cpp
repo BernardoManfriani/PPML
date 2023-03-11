@@ -30,7 +30,7 @@ int main(){
 
     vector<vector<int>> path = particle.getPath();  //path initialization
 
-    //cout << path[0].size() << endl;
+    cout << path[0].size() << endl;
     //print path
     /*
     for(int i = 0; i < path.size(); i++){
@@ -40,12 +40,12 @@ int main(){
     */
         
     //print maze with path
-    /*
+    
     for(int i = 0; i < path.size(); i++){
         maze2[path[i][0]][path[i][1]] = 2;
-    }*/
+    }
         
-    //maze1.printMaze(maze2, 0);
+    maze1.printMaze(maze2, 0);
         
         
     //per ogni punto senza vicini elimino il punto 
