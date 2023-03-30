@@ -24,6 +24,7 @@ int main(){
 
     vector<vector<int>> path = particle.getPath();  //path initialization
 
+    cout << path.size() << endl;
     //cout << path[0].size() << endl;
     //print path
     /*
