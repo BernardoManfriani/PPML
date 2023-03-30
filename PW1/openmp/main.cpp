@@ -29,9 +29,11 @@ int main(int argc, char* argv[]){
     //vector<int> particlePosition{1,1};   //particle initialization
     Particle particle({1,1}, maze1, numThreads);       //particle initialization
 
-    vector<vector<int>> pathP = particle.getPath();  //path initialization
+    //cout << "El tempo " << particle.getElapsedTime() << endl;
 
-    cout << pathP.size() << endl;
+    //vector<vector<int>> pathP = particle.getPath();  //path initialization
+
+    //cout << pathP.size() << endl;
     //print path
     
     //for(int i = 0; i < pathP.size(); i++){
@@ -41,14 +43,13 @@ int main(int argc, char* argv[]){
     
         
     //print maze with path
-    
+    /*
     for(int i = 0; i < pathP.size(); i++){
         maze2[pathP[i][0]][pathP[i][1]] = 2;
-    }
+        cout << "PROVAAAA"  << endl;
+    }*/
      
     //maze1.printMaze(maze2, 0);
-    
-        
     //per ogni punto senza vicini elimino il punto 
     // for(int i = 0; i < GRID_DIM - 1; i++){
     //     for(int j = 0 ; j < GRID_DIM - 1; j++){

@@ -19,7 +19,7 @@ void Particle::move(MazeGenerator maze){
     int direction; 
     vector<int> particleTmp;                           //particle position
     auto start = chrono::high_resolution_clock::now(); //start time
-    for(int i = 0; i < 100; i++){
+    for(int i = 0; i < 200; i++){
         path = {};                                      //path
         srand(time(NULL));
         particle = {1,1};                           //particle position
@@ -41,7 +41,7 @@ void Particle::move(MazeGenerator maze){
     auto finish = chrono::high_resolution_clock::now(); //end time
 
     chrono::duration<double> elapsed = finish - start;  //elapsed time 
-    elapsed = elapsed / 100;                           //avg elapsed time
+    elapsed = elapsed / 200;                           //avg elapsed time
     cout << "Elapsed time: " << elapsed.count() << endl;
 
     cout << "Solution found" << endl;

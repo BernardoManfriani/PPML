@@ -96,19 +96,20 @@ void Particle::move(MazeGenerator maze, int numTh){
     chrono::duration<double> elapsed = finish - start;  //elapsed time 
     elapsed = elapsed;                           //avg elapsed time
     if(particleT[0] == GRID_DIM - 1 && particleT[1] == GRID_DIM - 2){
-        cout << "Elapsed time: " << elapsed.count() << endl;
-        cout << "Solution found" << " thread: " << threadID << endl;
+        //cout << "Elapsed time: " << elapsed.count() << endl;
+        cout << elapsed.count() << endl;
+        //cout << "Solution found" << " thread: " << threadID << endl;
         //insert the patht into the main path
         path.insert(path.end(), pathT.begin(), pathT.end());
-        cout << "Path size: " << path.size() << endl;
+        //cout << "Path size: " << path.size() << endl;
         //maze.printMaze(maze1, 0);                      //print the maze
     }
     
     //double finish = omp_get_wtime();
     //double elapsed = finish - start;
     //cout << "Elapsed time: " << elapsed << "  Thread: " << threadID << endl;
-}
     
+}
 }
 
 
@@ -173,4 +174,6 @@ vector<vector<int>> Particle::getPath(){
 }
 
 
-
+double Particle::getElapsedTime(){
+    return elapsedTime;
+}

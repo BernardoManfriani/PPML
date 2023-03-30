@@ -21,7 +21,8 @@ class Particle{
         vector<int> moveLeft(vector<int> particle);
         vector<int> moveUp(vector<int> particle);
         vector<vector<int>> getPath();
-         //find path
+        double getElapsedTime();
+        //find path
         
         
 
@@ -31,7 +32,6 @@ class Particle{
         vector<vector<int>> path; 
         vector<vector<int>> findPath(vector<int> particle, vector<vector<int>> path);
         void solutionFind(int iteration, MazeGenerator maze);
-
 };
 
 
