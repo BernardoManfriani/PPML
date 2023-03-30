@@ -11,12 +11,12 @@
 #include <omp.h>
 
 
-Particle::Particle(vector<int> particlePos, MazeGenerator maze){
+Particle::Particle(vector<int> particlePos, MazeGenerator maze, int numTh){
     maze1 = maze.getMaze();    //initilize the maze
-    move(maze);                //move the particle
+    move(maze, numTh);                //move the particle
 }
 
-void Particle::move(MazeGenerator maze){
+void Particle::move(MazeGenerator maze, int numTh){
     int direction, numThreads, threadID; 
     vector<int> particleTmp = particle;                    //particle position
     bool solutionFound = false;
@@ -27,24 +27,27 @@ void Particle::move(MazeGenerator maze){
     //particleTmp = particle;                     //save the particle position
 
     omp_set_dynamic(0);     // Explicitly disable dynamic teams
-    omp_set_num_threads(8); // Use 4 threads for all consecutive parallel regions
+    omp_set_num_threads(numTh); // Use 4 threads for all consecutive parallel regions
     //maze1 = maze.getMaze();
 #pragma omp parallel private(numThreads, threadID, direction, particleTmp, maze1, particle)
 {        
 
     srand(time(NULL));
     vector<int> particleT = {1,1};                           //particle position
-    vector<vector<int>> pathT;
+    vector<vector<int>> pathT = {};
     numThreads = omp_get_num_threads();
     threadID = omp_get_thread_num();
     maze1 = maze.getMaze();	
     if(threadID == 0){
-        maze.printMaze(maze1, 0);                      //print the maze
+        //cout << "Number of threads: " << numThreads << endl;
+        //maze.printMaze(maze1, 0);                      //print the maze
     }
     auto start = chrono::high_resolution_clock::now();
-    for (size_t i = 0; i < 10; i++){
+//#pragma omp for
+    //for (int i = 0; i < 100; i++){
         particleT = {1,1};                           //particle position
         particleTmp = particleT;                     //save the particle position
+        pathT = {};
         while(particleT[0] != GRID_DIM - 1 || particleT[1] != GRID_DIM - 2){ 
             do{
                 direction = rand() % 4;                 //random direction for the particle
@@ -52,23 +55,36 @@ void Particle::move(MazeGenerator maze){
             }while(particleTmp == particleT);
 
             particleTmp = particleT;                     //save the particle position 
-            findPath(particleT, pathT);                                 //generate the path
-
+            //pathT = findPath(particleT, pathT);          //generate the path
+            //pathT.push_back(particleT);
+            if(pathT.size() > 2 && (pathT[pathT.size() - 2][0] == particleT[0] && pathT[pathT.size() - 2][1] == particleT[1])){  //if the particle is in the same direction of the previous one
+                pathT.erase(pathT.end()); 
+                pathT.erase(pathT.end() - 1);
+                //cout << "erase" << endl;
+            } else { 
+                pathT.push_back(particleT);
+                //cout << "push" << endl;
+            }
             maze1[particleT[0]][particleT[1]] = 2;        //put the particle in the maze
             if(solutionFound) break;
+            //cout << "Thread: " << threadID << "  " << particleT[0] << " " << particleT[1] << endl;
+            //cout << "iterazione" << i << endl;
         }
-    }
+    //}
     solutionFound = true;
     auto finish = chrono::high_resolution_clock::now(); //end time
 
     chrono::duration<double> elapsed = finish - start;  //elapsed time 
-    elapsed = elapsed / 10;                           //avg elapsed time
+    elapsed = elapsed / 1;                           //avg elapsed time
     if(particleT[0] == GRID_DIM - 1 && particleT[1] == GRID_DIM - 2){
         cout << "Elapsed time: " << elapsed.count() << endl;
         cout << "Solution found" << " thread: " << threadID << endl;
+        //insert the patht into the main path
         path.insert(path.end(), pathT.begin(), pathT.end());
-        maze.printMaze(maze1, 0);                      //print the maze
+        //cout << "Path size: " << path.size() << endl;
+        //maze.printMaze(maze1, 0);                      //print the maze
     }
+    
     //double finish = omp_get_wtime();
     //double elapsed = finish - start;
     //cout << "Elapsed time: " << elapsed << "  Thread: " << threadID << endl;
@@ -123,12 +139,14 @@ vector<int> Particle::chooseDirection(int direction, vector<int> particleT) {
     return particleT;
 }
 
-void Particle::findPath(vector<int> particleT, vector<vector<int>> pathT){                                                                                        //Backtracking the path of the particle insert in path vector the path of the particle
+vector<vector<int>> Particle::findPath(vector<int> particleT, vector<vector<int>> pathT){                                //Backtracking the path of the particle insert in path vector the path of the particle
     if(pathT.size() > 2 && (pathT[pathT.size() - 2][0] == particleT[0] && pathT[pathT.size() - 2][1] == particleT[1])){  //if the particle is in the same direction of the previous one
         pathT.erase(pathT.end()); 
         pathT.erase(pathT.end() - 1);
+        //cout << "erase" << endl;
     } else { 
         pathT.push_back(particleT);
+        //cout << "push" << endl;
     }
 
     //bool isPresent = true;        
@@ -140,7 +158,8 @@ void Particle::findPath(vector<int> particleT, vector<vector<int>> pathT){      
         path.push_back(particle); 
     } else {
     path.push_back(particle); 
-    }*/                         
+    }*/                       
+    return pathT;  
 }
 
 vector<vector<int>> Particle::getPath(){

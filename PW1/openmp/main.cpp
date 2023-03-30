@@ -17,7 +17,8 @@ using namespace std;
 
 //main function
 
-int main(){
+int main(int argc, char* argv[]){
+    int numThreads = atoi(argv[1]);
     vector<vector<int>> matrix(GRID_DIM, vector<int>(GRID_DIM, 0)); //matrix initialization
     MazeGenerator maze1(matrix);   //maze initialization
 
@@ -26,27 +27,27 @@ int main(){
     //maze1.printMaze(maze2, 0); //print maze
 
     //vector<int> particlePosition{1,1};   //particle initialization
-    Particle particle({1,1}, maze1);       //particle initialization
+    Particle particle({1,1}, maze1, numThreads);       //particle initialization
 
-    vector<vector<int>> path = particle.getPath();  //path initialization
+    vector<vector<int>> pathP = particle.getPath();  //path initialization
 
-    cout << path[0].size() << endl;
+    cout << pathP.size() << endl;
     //print path
-    /*
-    for(int i = 0; i < path.size(); i++){
-            cout << "(" << path[i][0] << "," << path[i][1] << ")" << endl;
+    
+    //for(int i = 0; i < pathP.size(); i++){
+      //      cout << "(" << pathP[i][0] << "," << pathP[i][1] << ")" << endl;
         //cout << endl;
-    }
-    */
+    //}
+    
         
     //print maze with path
     
-    for(int i = 0; i < path.size(); i++){
-        maze2[path[i][0]][path[i][1]] = 2;
+    for(int i = 0; i < pathP.size(); i++){
+        maze2[pathP[i][0]][pathP[i][1]] = 2;
     }
-        
-    maze1.printMaze(maze2, 0);
-        
+     
+    //maze1.printMaze(maze2, 0);
+    
         
     //per ogni punto senza vicini elimino il punto 
     // for(int i = 0; i < GRID_DIM - 1; i++){
