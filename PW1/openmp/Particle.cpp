@@ -44,14 +44,33 @@ void Particle::move(MazeGenerator maze, int numTh){
     }
     auto start = chrono::high_resolution_clock::now();
 //#pragma omp for
-    //for (int i = 0; i < 100; i++){
+    //for (int i = 0; i < 1; i++){
         particleT = {1,1};                           //particle position
         particleTmp = particleT;                     //save the particle position
         pathT = {};
+        //cout << "pathsize " << pathT.size() << endl;
         while(particleT[0] != GRID_DIM - 1 || particleT[1] != GRID_DIM - 2){ 
             do{
                 direction = rand() % 4;                 //random direction for the particle
-                particleT = chooseDirection(direction, particleT);  //choose the direction for the particle
+                switch (direction) {
+                    case 0:
+                        if (maze1[particleT[0]][particleT[1] + 1] == 0 || maze1[particleT[0]][particleT[1] + 1] == 2)
+                            particleT[1] = particleT[1] + 1;
+                        break;
+                    case 1:
+                        if (maze1[particleT[0] + 1][particleT[1]] == 0 || maze1[particleT[0] + 1][particleT[1]] == 2)
+                            particleT[0] = particleT[0] + 1;
+                        break;
+                    case 2:
+                        if (maze1[particleT[0]][particleT[1] - 1] == 0 || maze1[particleT[0]][particleT[1] - 1] == 2)
+                            particleT[1] = particleT[1] - 1;
+                        break;
+                    case 3:
+                        if (particleT[0] > 0 && (maze1[particleT[0] - 1][particleT[1]] == 0 || maze1[particleT[0] - 1][particleT[1]] == 2))
+                            particleT[0] = particleT[0] - 1;
+                        break;
+                }
+                //particleT = chooseDirection(direction, particleT);  //choose the direction for the particle
             }while(particleTmp == particleT);
 
             particleTmp = particleT;                     //save the particle position 
@@ -75,13 +94,13 @@ void Particle::move(MazeGenerator maze, int numTh){
     auto finish = chrono::high_resolution_clock::now(); //end time
 
     chrono::duration<double> elapsed = finish - start;  //elapsed time 
-    elapsed = elapsed / 1;                           //avg elapsed time
+    elapsed = elapsed;                           //avg elapsed time
     if(particleT[0] == GRID_DIM - 1 && particleT[1] == GRID_DIM - 2){
         cout << "Elapsed time: " << elapsed.count() << endl;
         cout << "Solution found" << " thread: " << threadID << endl;
         //insert the patht into the main path
         path.insert(path.end(), pathT.begin(), pathT.end());
-        //cout << "Path size: " << path.size() << endl;
+        cout << "Path size: " << path.size() << endl;
         //maze.printMaze(maze1, 0);                      //print the maze
     }
     
@@ -122,20 +141,7 @@ vector<int> Particle::moveUp(vector<int> particleT) {
 }
 
 vector<int> Particle::chooseDirection(int direction, vector<int> particleT) {
-    switch (direction) {
-        case 0:
-            particleT = moveRight(particleT);
-            break;
-        case 1:
-            particleT = moveDown(particleT);
-            break;
-        case 2:
-            particleT = moveLeft(particleT);
-            break;
-        case 3:
-            particleT = moveUp(particleT);
-            break;
-    }
+    
     return particleT;
 }
 

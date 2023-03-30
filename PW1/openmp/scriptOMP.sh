@@ -2,7 +2,7 @@
 
 time=[]
 
-for x in {2..8}
+for x in {2..16}
 do
     echo "Running with $x threads"
     ./maze.x $x
