@@ -16,9 +16,22 @@ At the end it is necessary to evaluate a performance analysis (mainly the speed 
 ### To build and run the project
 Enter into the subdirectory PW1. 
 
+#Sequential
+$ cd sequntial
+
 $ make
 
 $ ./maze.x
 
+#Openmp
+$ cd openmp
+
+$ make
+
+$ ./scriptOMP.sh
+
+
+#Output
+The output is inserted into the files time_numthread.csv and the average times in the file media.csv
 
 ## PW2 
