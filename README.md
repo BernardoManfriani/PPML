@@ -17,18 +17,20 @@ At the end it is necessary to evaluate a performance analysis (mainly the speed 
 Enter into the subdirectory PW1. 
 
 #Sequential
-$ cd sequntial
 
-$ make
+`$ cd sequntial`
 
-$ ./maze.x
+`$ make`
+
+`$ ./maze.x`
 
 #Openmp
-$ cd openmp
 
-$ make
+`$ cd openmp`
 
-$ ./scriptOMP.sh
+`$ make`
+
+`$ ./scriptOMP.sh`
 
 
 #Output
